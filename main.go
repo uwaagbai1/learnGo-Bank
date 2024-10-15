@@ -1,34 +1,14 @@
 package main
 
 import (
-	"errors"
+	"bank/fileOps"
 	"fmt"
-	"os"
-	"strconv"
 )
 
 const accountBalanceFile = "balance.txt"
 
-func getFloatFromFile(fileName string) (float64, error) {
-	data, err := os.ReadFile(fileName)
-	if err != nil {
-		return 1000, errors.New("failed to read file")
-	}
-	valueText := string(data)
-	value, err := strconv.ParseFloat(valueText, 64)
-	if err != nil {
-		return 1000, errors.New("failed to parse stored value")
-	}
-	return value, nil
-}
-
-func writeFloatToFile(value float64, fileName string) {
-	valueText := fmt.Sprintf("%.2f", value)
-	os.WriteFile(fileName, []byte(valueText), 0644)
-}
-
 func main() {
-	accountBalance, err := getFloatFromFile(accountBalanceFile)
+	accountBalance, err := fileOps.GetFloatFromFile(accountBalanceFile)
 	if err != nil {
 		fmt.Println("ERROR: ")
 		fmt.Println(err)
@@ -57,7 +37,7 @@ func main() {
 				continue
 			}
 			accountBalance += depositAmount
-			writeFloatToFile(accountBalance, accountBalanceFile)
+			fileOps.WriteFloatToFile(accountBalance, accountBalanceFile)
 			fmt.Println("Your Balance after the deposit is: ", accountBalance)
 
 		case 3:
@@ -73,7 +53,7 @@ func main() {
 				continue
 			}
 			accountBalance -= withdrawAmount
-			writeFloatToFile(accountBalance, accountBalanceFile)
+			fileOps.WriteFloatToFile(accountBalance, accountBalanceFile)
 			fmt.Println("Your Balance after withdraw is: ", accountBalance)
 
 		default:
